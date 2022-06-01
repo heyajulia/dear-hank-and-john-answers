@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+set -euxo pipefail
+
+poetry run python3 generate_episodes_json.py > episodes.json
+poetry run python3 generate_questions_md.py > questions.md
