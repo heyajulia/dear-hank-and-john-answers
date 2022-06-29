@@ -2,5 +2,6 @@
 
 set -euxo pipefail
 
+wget -O feed.xml https://feeds.simplecast.com/9YNI3WaL
 poetry run python3 generate_episodes_json.py > episodes.json
 poetry run python3 generate_questions_md.py > questions.md
