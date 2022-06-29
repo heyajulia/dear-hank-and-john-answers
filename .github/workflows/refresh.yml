@@ -1,0 +1,34 @@
+on:
+  # TODO: Run on a schedule
+  workflow_dispatch:
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up GitHub Actions identity
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email 'github-actions[bot]@users.noreply.github.com'
+      - run: git checkout -b refresh-$(date +"%Y%m%d")
+      - uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+      - run: pipx install poetry
+      - run: poetry install
+      - run: scripts/generate
+      - run: npx prettier --write '**/*.{md,json}'
+      - name: Commit and push
+        run: |
+          git add .
+          git commit -m "$(date +'%B %d, %Y')"
+          git push -u origin HEAD
+      - name: Create pull request
+        uses: repo-sync/pull-request@v2
+        with:
+          destination_branch: main
+          title: "$(date +'%B %d, %Y')"
+          github_token: ${{ secrets.GITHUB_TOKEN }}
