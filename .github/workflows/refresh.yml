@@ -1,3 +1,4 @@
+name: Refresh
 on:
   # TODO: Run on a schedule
   workflow_dispatch:
